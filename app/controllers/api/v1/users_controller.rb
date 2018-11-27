@@ -24,7 +24,8 @@ module Api::V1
                status: :unprocessable_entity
       end
     end
-
+    
+    
     # PUT /users/{username}
     def update
       @user = User.find_by_username(params[:username])
