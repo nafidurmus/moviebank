@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  rating_value: 1.5
+  rating_movie_id: MyString
+
+two:
+  user_id: 
+  rating_value: 1.5
+  rating_movie_id: MyString

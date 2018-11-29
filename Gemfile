@@ -10,6 +10,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
+gem 'rack-cors', :require => 'rack/cors'
+
+gem 'active_model_serializers'
 
 
 
