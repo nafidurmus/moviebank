@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_29_181434) do
+ActiveRecord::Schema.define(version: 2018_11_29_184559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,13 @@ ActiveRecord::Schema.define(version: 2018_11_29_181434) do
     t.string "username"
     t.string "email"
     t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "watchlists", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "watchlist_movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
