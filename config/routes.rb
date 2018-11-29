@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
   
+  
 	namespace :api do
 		namespace :v1 do
 		  resources :users  , param: :username
 		  resources :ratings
+		  resources :comments
 		  
 		  post '/auth/login', to: 'authentication#login'
 		end

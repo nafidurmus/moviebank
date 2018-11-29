@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :rating
+  has_many :comment
 
   has_secure_password
   validates :email, presence: true, uniqueness: true
