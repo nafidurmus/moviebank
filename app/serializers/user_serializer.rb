@@ -4,4 +4,5 @@ class UserSerializer < ActiveModel::Serializer
   has_many :rating
   has_many :comment
   has_many :watchlist
+  has_many :watchlater
 end

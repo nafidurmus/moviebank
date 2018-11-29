@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 		  resources :ratings
 		  resources :comments
 		  resources :watchlists
+		  resources :watchlaters
 		  
 		  post '/auth/login', to: 'authentication#login'
 		end
