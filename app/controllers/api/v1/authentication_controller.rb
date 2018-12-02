@@ -9,7 +9,8 @@ module Api::V1
         token = JsonWebToken.encode(id: @user.id)
         time = Time.now + 24.hours.to_i
         render json: { token: token, exp: time.strftime("%m-%d-%Y %H:%M"),
-                       username: @user.username, firstname: @user.firstname }, status: :ok
+                       username: @user.username }, status: :ok
+        #render json: {token: token}, status: :ok
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
       end
@@ -26,3 +27,4 @@ module Api::V1
     end
   end
 end
+
