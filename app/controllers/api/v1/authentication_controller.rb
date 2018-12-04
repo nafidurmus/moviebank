@@ -19,6 +19,8 @@ module Api::V1
 
     def logout
       #frontend ile yapılabilir.
+      #logout
+      #redirect_to root_url
     end
 
     private

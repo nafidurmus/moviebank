@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 		  resources :watchlaters
 		  
 		  post '/auth/login', to: 'authentication#login'
+		  #get '/auth/logout', to: 'authentication#logout'
 		end
 	end
 
