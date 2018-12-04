@@ -1,7 +1,7 @@
 module Api::V1
   class AuthenticationController < ApplicationController
     before_action :authorize_request, except: :login
-    require 'jwt'
+    #require 'jwt'
 
     # POST /auth/login
     def login
@@ -10,9 +10,8 @@ module Api::V1
         token = JsonWebToken.encode(id: @user.id)
         time = Time.now #+ 24.hours.to_i
         render json: { token: token, last_login_time: time.strftime("%m-%d-%Y %H:%M"),
-                       username: @user.username, firstname: @user.firstname }, status: :ok
-        
-
+                       user: @user, comment: @user.comment}, status: :ok
+                       # comment: @user.comment şu şekilde diğerleride çağrılabilir.
       else
         render json: { error: 'Login Unsuccessfull(Invalid username / password)' }, status: :unauthorized
       end
@@ -25,7 +24,7 @@ module Api::V1
     private
 
     def login_params
-      params.permit(:email, :password)
+      params.require(:user).permit(:email, :password)
     end
   end
 end
