@@ -21,6 +21,10 @@ module Api::V1
       #frontend ile yapılabilir.
       #logout
       #redirect_to root_url
+
+      #session = JsonWebToken::Session.new(payload: payload)
+      #session.flush_by_access_payload
+      #render json: :ok
     end
 
     private
