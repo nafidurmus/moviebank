@@ -15,7 +15,7 @@ export class CelebsStore extends Reflux.Store {
     async getCelebs() {
         const results = [];
         for (let i = 1; i < 6; i++) {
-            await Fetch('trending/person/week', "&page=" + i).then(function (response) {
+            await Fetch('person/popular', "&page=" + i).then(function (response) {
                 results.push(response.data.results);
                 //console.log(response);
             }.bind(this))

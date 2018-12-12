@@ -40,6 +40,7 @@ module Api::V1
 	  # DELETE /comments/1
 	  def destroy
 	    @comment.destroy
+	    render json: {notice: 'Comment was successfully destroyed'}
 	  end
 
 	  private

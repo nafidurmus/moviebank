@@ -27,6 +27,8 @@ $ gem install rails --version=5.2.1
 
 $ rails -v => 5.2.1
 
+$ sudo apt-get install postgresql // database i indirmek için
+
 ```
 
 ### Installing

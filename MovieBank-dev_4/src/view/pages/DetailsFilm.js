@@ -153,7 +153,12 @@ export default class DetailsFilm extends Reflux.Component {
                             <CardText><b>Production Countries: </b>{this.getCommadString(film_details.production_countries)}</CardText><hr />
                             <CardText><b>Spoken Languages: </b>{this.getCommadString(film_details.spoken_languages)}</CardText><hr />
                             <CardText><b>Genres: </b>{this.getCommadString(film_details.genres)}</CardText><hr />
+
                             <CardText><b>Homepage: </b><a href={film_details.homepage}>{film_details.homepage}</a></CardText><hr />
+                            <CardText><b>Orginal Language: </b>{film_details.original_language}</CardText><hr />
+                            <CardText><b>Budget: </b>{film_details.budget}</CardText><hr />
+                            <CardText><b>Relase Date: </b>{film_details.release_date}</CardText><hr />
+                            <CardText><b>Runtime: </b>{film_details.runtime}</CardText><hr />
                         </div>
                     </div>
                 </CardBlock>

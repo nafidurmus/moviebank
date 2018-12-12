@@ -38,6 +38,7 @@ module Api::V1
 	  # DELETE /watchlaters/1
 	  def destroy
 	    @watchlater.destroy
+	    render json: {notice: 'Movie was successfully destroyed for your list'}
 	  end
 
 	  private

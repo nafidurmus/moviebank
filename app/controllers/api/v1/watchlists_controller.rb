@@ -38,6 +38,7 @@ module Api::V1
 	  # DELETE /watchlists/1
 	  def destroy
 	    @watchlist.destroy
+	    render json: {notice: 'Movie was successfully destroyed for your list'}
 	  end
 
 	  private

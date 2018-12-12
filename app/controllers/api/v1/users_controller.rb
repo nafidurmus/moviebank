@@ -1,6 +1,6 @@
 module Api::V1 
   class UsersController < ApplicationController
-    before_action :authorize_request, except: [:create, :show, :index]
+    before_action :authorize_request, except: [:create, :show, :index, :destroy, :update]
  
     # GET /users
     def index
@@ -32,6 +32,7 @@ module Api::V1
       unless @user&.update(user_params)
         render json: { errors: 'User not found' }, status: :not_found
       end
+      render json: @user
     end
 
     # REMOVE /users/{username}
@@ -40,6 +41,7 @@ module Api::V1
       unless @user&.destroy
         render json: { errors: 'User not found' }, status: :not_found
       end
+        render json: { notice: 'User was successfully destroyed' }
     end
 
     private
