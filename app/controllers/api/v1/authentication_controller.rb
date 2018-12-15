@@ -1,6 +1,6 @@
 module Api::V1
   class AuthenticationController < ApplicationController
-    before_action :authorize_request, except: :login
+    before_action :authorize_request, except: [:login, :forget_password]
     #require 'jwt'
 
     # POST /auth/login
@@ -18,19 +18,25 @@ module Api::V1
     end
 
     def logout
-      #frontend ile yapılabilir.
-      #logout
-      #redirect_to root_url
-
-      #session = JsonWebToken::Session.new(payload: payload)
-      #session.flush_by_access_payload
-      #render json: :ok
     end
+
+    def forget_password
+      @user = User.find_by_username(params[:username])
+      unless @user&.update(password_params)
+        render json: { errors: 'User not found' }, status: :not_found
+      end
+      render json: @user
+    end
+
 
     private
 
     def login_params
       params.require(:user).permit(:email, :password)
+    end
+
+    def password_params
+       params.permit(:password, :password_confirmation)
     end
   end
 end
