@@ -1,8 +1,8 @@
 class User < ApplicationRecord
-  has_many :rating
-  has_many :comment
-  has_many :watchlist
-  has_many :watchlater
+  has_many :rating, dependent: :destroy
+  has_many :comment, dependent: :destroy
+  has_many :watchlist, dependent: :destroy
+  has_many :watchlater, dependent: :destroy
 
   has_secure_password
   validates :email, presence: true, uniqueness: true
