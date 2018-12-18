@@ -72,3 +72,79 @@ export function login(user) {
             return error.response
         })
 }
+
+export function addWatchedList(userId, movieId) {
+    //console.log(user)
+    return axios({
+            method: 'post',
+            url: "http://localhost:3001/api/v1/watchlists/",
+            data: { user_id : userId, watchlist_movie_id: movieId }
+        })
+        .then(response => {
+            return console.log(response)
+        })
+        .catch(error => {
+            return console.log(error.response)
+        })
+}
+
+export function getWatchedList(username) {
+    //console.log(user)
+    return axios({
+            method: 'get',
+            url: "http://localhost:3001/api/v1/users/" + username,
+        })
+}
+
+export function deleteFromWatchedList(id) {
+    //console.log(user)
+    return axios({
+            method: 'delete',
+            url: "http://localhost:3001/api/v1/watchlists/"+id
+        })
+        .then(response => {
+            return console.log(response)
+        })
+        .catch(error => {
+            return console.log(error.response)
+        })
+}
+
+
+
+export function addWatchLaterList(userId, movieId) {
+    //console.log(user)
+    return axios({
+            method: 'post',
+            url: "http://localhost:3001/api/v1/watchlaters/",
+            data: { user_id : userId, watchlater_movie_id: movieId }
+        })
+        .then(response => {
+            return console.log(response)
+        })
+        .catch(error => {
+            return console.log(error.response)
+        })
+}
+
+export function getWatchLaterList(username) {
+    //console.log(user)
+    return axios({
+            method: 'get',
+            url: "http://localhost:3001/api/v1/users/" + username,
+        })
+}
+
+export function deleteFromWatchLaterList(id) {
+    //console.log(user)
+    return axios({
+            method: 'delete',
+            url: "http://localhost:3001/api/v1/watchlaters/"+id
+        })
+        .then(response => {
+            return console.log(response)
+        })
+        .catch(error => {
+            return console.log(error.response)
+        })
+}

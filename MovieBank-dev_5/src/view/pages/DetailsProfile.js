@@ -12,8 +12,10 @@ import CardListMovie from '../component/CardListMovie';
 import Footer from '../component/Footer';
 import NowPlaying from '../component/NowPlaying';
 import ContentContainer from '../component/ContentContainer';
+import { actions } from '../../actions';
 import { BoxOfficeStore } from '../../controller/stores/BoxOfficeStore';
-import { PlayingStore } from '../../controller/stores/PlayingStore';
+import { FilmDetailsStore } from '../../controller/stores/FilmDetailsStore';
+import { getWatchLaterList, getWatchedList } from '../../controller/utils/UserApi';
 
 
 export default class DetailsProfile extends Reflux.Component {
@@ -24,6 +26,8 @@ export default class DetailsProfile extends Reflux.Component {
             profileId: this.props.location.search.split(":")[1],
             activeTab: '1',
             unlockPrflInfo: false,
+            watchedList: null,
+            watchLaterList: null,
 
             id: loginInfo.id ? loginInfo.id : "",
             username: loginInfo.username ? loginInfo.username : "",
@@ -33,11 +37,13 @@ export default class DetailsProfile extends Reflux.Component {
             password_confirm: loginInfo.password_confirm ? loginInfo.password_confirm : "",
             email: loginInfo.email ? loginInfo.email : "",
         }
-        this.stores = [BoxOfficeStore, PlayingStore];
+        this.stores = [BoxOfficeStore, FilmDetailsStore];
 
         this.toggleTab = this.toggleTab.bind(this);
         this.renderTabs = this.renderTabs.bind(this);
         this.saveData = this.saveData.bind(this);
+        this.getLists = this.getLists.bind(this);
+        this.getLists();
     }
 
     toggleTab(tab) {
@@ -46,6 +52,23 @@ export default class DetailsProfile extends Reflux.Component {
                 activeTab: tab
             });
         }
+    }
+
+    getLists(){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        getWatchLaterList(loginData.username).then(response => {
+            const results = [];
+            for(let i = 0 ; i < response.data.watchlater.length; i++) {
+                actions.getFilmDetails(response.data.watchlater[i].watchlater_movie_id);
+                results.push(this.state.film_details);
+            }
+            var merged = [].concat.apply([], results);
+            console.log(results)
+            this.setState({ watchLaterList: merged })           
+        })
+        getWatchedList(loginData.username).then(response => {
+            this.setState({ watchedList: response.data.watchlist })           
+        })
     }
 
     saveData() {
@@ -167,8 +190,8 @@ export default class DetailsProfile extends Reflux.Component {
                         <Row style={{ marginTop: 20 }}>
                             <Col sm="12">
                                 <ContentContainer title="Watched List">
-                                    {this.state.playing ?
-                                        <CardListMovie items="4" list={this.state.playing} />
+                                    {this.state.watchedList ?
+                                        <CardListMovie items="4" list={this.state.watchedList} />
                                         : "Loading..."}
                                 </ContentContainer>
                                 <Link to={{ pathname: "/watched-list", search: ("?id:" + this.state.id) }}>
@@ -182,7 +205,7 @@ export default class DetailsProfile extends Reflux.Component {
                         <Row>
                             <Col sm="12">
                                 <ContentContainer title="Watch Later">
-                                    {this.state.playing ? <CardListMovie items="4" list={this.state.playing} /> : "Loading..."}
+                                    {this.state.watchLaterList ? <CardListMovie items="4" list={this.state.watchLaterList} /> : "Loading..."}
                                 </ContentContainer>
                                 <Link to={{ pathname: "/watch-later", search: ("?id:" + this.state.id) }}>
                                     <Button

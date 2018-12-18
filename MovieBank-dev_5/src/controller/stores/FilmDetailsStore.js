@@ -11,7 +11,6 @@ export class FilmDetailsStore extends Reflux.Store {
         // actions.getFilmDetails.listen(this.getFilmDetails())
     }
 
-
     getFilmDetails(id) {
         Fetch('movie/'+ id).then(function (response) {
             const film_details = response.data;

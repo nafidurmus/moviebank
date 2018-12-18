@@ -21,6 +21,7 @@ import { FilmDetailsStore } from '../../controller/stores/FilmDetailsStore';
 import { BoxOfficeStore } from '../../controller/stores/BoxOfficeStore';
 import { actions } from '../../actions';
 import { Poster_Link } from '../../controller/utils/Api';
+import { addWatchedList, getWatchedList, deleteFromWatchedList, addWatchLaterList, getWatchLaterList, deleteFromWatchLaterList } from '../../controller/utils/UserApi';
 import UnknownProfile from '../image/unknown-profile.jpg';
 import '../css/DetailsPage.css';
 import NowPlaying from '../component/NowPlaying';
@@ -29,13 +30,21 @@ import StarRating from '../component/StarRating';
 export default class DetailsFilm extends Reflux.Component {
     constructor(props) {
         super(props);
-        this.state = { rating: "0", showMoreBtnVisbltyCast: true, showMoreBtnVisbltyCrew: true };
+        this.state = { rating: "0", showMoreBtnVisbltyCast: true, showMoreBtnVisbltyCrew: true, filmApiId: null, watchedListButton: null, watchLaterListButton: null };
         this.giveRate = this.giveRate.bind(this);
+        this.addWatchList = this.addWatchList.bind(this);
+        this.getIfWatched = this.getIfWatched.bind(this);
+        this.deleteFromWatchList = this.deleteFromWatchList.bind(this);
+        this.addWtchLaterList = this.addWatchLaterList.bind(this);
+        this.getIfWillWatch = this.getIfWillWatch.bind(this);
+        this.deleteFromWatchLaterList = this.deleteFromWatchLaterList.bind(this);
         actions.getFilmDetails(this.props.location.search.split(":")[1]);
         actions.getFilmCredits(this.props.location.search.split(":")[1]);
         //Eğer "Link" vasıtasıyla "state" gönderildiyse: this.props.location.state.id
         actions.getVideos(this.props.location.search.split(":")[1]);
         this.stores = [FilmDetailsStore, BoxOfficeStore];
+        this.getIfWatched();
+        this.getIfWillWatch();
     }
 
     getCommadString(myString) {
@@ -123,7 +132,66 @@ export default class DetailsFilm extends Reflux.Component {
         )
     }
 
+    addWatchList(){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        addWatchedList(loginData.id, this.props.location.search.split(":")[1])
+        return window.location.reload(false);
+    }
+
+    deleteFromWatchList(){
+        deleteFromWatchedList(this.state.filmApiId)
+        return window.location.reload(false);
+    }
+
+    getIfWatched(){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        const filmID = window.location.search.split(":")[1];
+        getWatchedList(loginData.username).then(response => {
+            for(let i = 0 ; i < response.data.watchlist.length; i++){
+                if(response.data.watchlist[i].watchlist_movie_id == filmID){
+                    this.setState({ filmApiId:response.data.watchlist[i].id, watchedListButton: true })
+                    return;
+                }else {
+                    this.setState({ filmApiId:response.data.watchlist[i].id, watchedListButton: false })
+                }
+            }            
+        })
+        .catch(error => {
+            return console.log(error.response)
+        });
+    }
+
+    addWatchLaterList(){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        addWatchLaterList(loginData.id, window.location.search.split(":")[1])
+        return window.location.reload(false);
+    }
+
+    deleteFromWatchLaterList(){
+        deleteFromWatchLaterList(this.state.filmApiId)
+        return window.location.reload(false);
+    }
+
+    getIfWillWatch(){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        const filmID = window.location.search.split(":")[1];
+        getWatchLaterList(loginData.username).then(response => {
+            for(let i = 0 ; i < response.data.watchlater.length; i++){
+                if(response.data.watchlater[i].watchlater_movie_id == filmID){
+                    this.setState({ filmApiId:response.data.watchlater[i].id, watchLaterListButton: true })
+                    return;
+                }else {
+                    this.setState({ filmApiId:response.data.watchlater[i].id, watchLaterListButton: false })
+                }
+            }            
+        })
+        .catch(error => {
+            return console.log(error.response)
+        });
+    }
+
     renderBottomButtons(film_details) {
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
         return (
             <CardBlock >
                 <Link to={{
@@ -135,8 +203,14 @@ export default class DetailsFilm extends Reflux.Component {
                         Comments
                         </Button>
                 </Link>
-                <Button color="success" style={{ margin: 5 }}>Watchlist</Button>
-                <Button color="primary">Watch Later</Button>
+                {loginData ? 
+                    (this.state.watchedListButton ? <Button color="danger" style={{ margin: 5 }} onClick={this.deleteFromWatchList}>Remove Watchlist</Button> : <Button color="success" style={{ margin: 5 }} onClick={this.addWatchList}>Add Watchlist</Button>)
+                    : ""
+                }
+                {loginData ? 
+                    (this.state.watchLaterListButton ? <Button color="danger" style={{ margin: 5 }} onClick={this.deleteFromWatchLaterList}>Remove Watch Later</Button> : <Button color="primary" onClick={this.addWatchLaterList}>Watch Later</Button>)
+                    : ""
+                }
             </CardBlock>
         )
     }
