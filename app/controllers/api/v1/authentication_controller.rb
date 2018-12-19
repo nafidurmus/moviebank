@@ -8,10 +8,11 @@ module Api::V1
       @user = User.find_by_username(params[:username])
       if @user&.authenticate(params[:password])
         token = JsonWebToken.encode(id: @user.id)
-        time = Time.now #+ 24.hours.to_i
+        time = Time.now + 24.hours.to_i
         render json: { token: token, last_login_time: time.strftime("%m-%d-%Y %H:%M"),
                        user: @user}, status: :ok
                        # comment: @user.comment şu şekilde diğerleride çağrılabilir.
+                       # , reset: @reset_password_token
       else
         render json: { error: 'Login Unsuccessfull(Invalid username / password)' }, status: :unauthorized
       end

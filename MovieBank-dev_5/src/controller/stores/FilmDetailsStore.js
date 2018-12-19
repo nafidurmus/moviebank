@@ -6,9 +6,20 @@ export class FilmDetailsStore extends Reflux.Store {
 
     constructor() {
         super();
-        this.state = { film_details: null, videos: null, credits: null };
+        this.state = { film_details: null, videos: null, credits: null, filmDetailsForLists: null };
         this.listenToMany(actions);
         // actions.getFilmDetails.listen(this.getFilmDetails())
+    }
+
+    async getFilmDetailsForLists(movieIdArray){
+        const results = [];
+        for(let i = 0; i < movieIdArray.length; i++){
+            await Fetch('movie/' + movieIdArray[i]).then(function (response) {
+                //console.log(response.data)
+                results.push(response.data);
+            }.bind(this))
+        }
+        await this.setState({filmDetailsForLists: results});
     }
 
     getFilmDetails(id) {

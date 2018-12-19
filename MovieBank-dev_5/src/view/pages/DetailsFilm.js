@@ -21,7 +21,7 @@ import { FilmDetailsStore } from '../../controller/stores/FilmDetailsStore';
 import { BoxOfficeStore } from '../../controller/stores/BoxOfficeStore';
 import { actions } from '../../actions';
 import { Poster_Link } from '../../controller/utils/Api';
-import { addWatchedList, getWatchedList, deleteFromWatchedList, addWatchLaterList, getWatchLaterList, deleteFromWatchLaterList } from '../../controller/utils/UserApi';
+import { addWatchedList, getWatchedList, deleteFromWatchedList, addWatchLaterList, getWatchLaterList, deleteFromWatchLaterList, sendRate, updateRate, getRate } from '../../controller/utils/UserApi';
 import UnknownProfile from '../image/unknown-profile.jpg';
 import '../css/DetailsPage.css';
 import NowPlaying from '../component/NowPlaying';
@@ -30,7 +30,8 @@ import StarRating from '../component/StarRating';
 export default class DetailsFilm extends Reflux.Component {
     constructor(props) {
         super(props);
-        this.state = { rating: "0", showMoreBtnVisbltyCast: true, showMoreBtnVisbltyCrew: true, filmApiId: null, watchedListButton: null, watchLaterListButton: null };
+        this.state = { rating: "0", showMoreBtnVisbltyCast: true, showMoreBtnVisbltyCrew: true, filmWatchlistApiId: null, filmWatchLaterApiId: null, watchedListButton: null, watchLaterListButton: null, rates: null };
+        
         this.giveRate = this.giveRate.bind(this);
         this.addWatchList = this.addWatchList.bind(this);
         this.getIfWatched = this.getIfWatched.bind(this);
@@ -38,6 +39,8 @@ export default class DetailsFilm extends Reflux.Component {
         this.addWtchLaterList = this.addWatchLaterList.bind(this);
         this.getIfWillWatch = this.getIfWillWatch.bind(this);
         this.deleteFromWatchLaterList = this.deleteFromWatchLaterList.bind(this);
+        this.saveDbRate = this.saveDbRate.bind(this);
+        this.getData = this.getData.bind(this);
         actions.getFilmDetails(this.props.location.search.split(":")[1]);
         actions.getFilmCredits(this.props.location.search.split(":")[1]);
         //Eğer "Link" vasıtasıyla "state" gönderildiyse: this.props.location.state.id
@@ -45,6 +48,7 @@ export default class DetailsFilm extends Reflux.Component {
         this.stores = [FilmDetailsStore, BoxOfficeStore];
         this.getIfWatched();
         this.getIfWillWatch();
+        this.getData();
     }
 
     getCommadString(myString) {
@@ -59,10 +63,48 @@ export default class DetailsFilm extends Reflux.Component {
         return newString;
     }
 
+    async getData(){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        if(loginData) {
+            await getRate().then(response => {
+                this.setState({ rates: response.data })
+            })
+            var currentFilmId = window.location.search.split(":")[1];
+            if(this.state.rates.length != 0) {
+                var rates = this.state.rates;
+                let rateBool = false;
+                for(let i = 0; i < rates.length; i++){
+                    if(rates[i].user_id == loginData.id && rates[i].rating_movie_id == currentFilmId) {
+                        rateBool = true;
+                        this.setState({rating : rates[i].rating_value, rateId: rates[i].id })
+                        break;
+                    } else { rateBool = false; }
+                }
+                return rateBool;
+            }
+        }
+    }
+
     giveRate(newRating) {
         this.setState({
             rating: newRating
         });
+        if(this.state.rating == "0"){
+            this.saveDbRate(newRating, "post");
+        } else {
+            this.saveDbRate(newRating, "update");
+        }
+    }
+
+    saveDbRate(rating, UptOrDlt){
+        const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
+        var rate = {
+            rating_value: rating,
+            user_id: loginData.id,
+            rating_movie_id: this.props.location.search.split(":")[1]
+        }
+        if(UptOrDlt == "post") { sendRate(rate); }
+        else if(UptOrDlt == "update") { updateRate(rate, this.state.rateId) }
     }
 
     renderCastCrewCard(data, choice) {
@@ -139,7 +181,7 @@ export default class DetailsFilm extends Reflux.Component {
     }
 
     deleteFromWatchList(){
-        deleteFromWatchedList(this.state.filmApiId)
+        deleteFromWatchedList(this.state.filmWatchlistApiId)
         return window.location.reload(false);
     }
 
@@ -149,10 +191,10 @@ export default class DetailsFilm extends Reflux.Component {
         getWatchedList(loginData.username).then(response => {
             for(let i = 0 ; i < response.data.watchlist.length; i++){
                 if(response.data.watchlist[i].watchlist_movie_id == filmID){
-                    this.setState({ filmApiId:response.data.watchlist[i].id, watchedListButton: true })
+                    this.setState({ filmWatchlistApiId:response.data.watchlist[i].id, watchedListButton: true })
                     return;
                 }else {
-                    this.setState({ filmApiId:response.data.watchlist[i].id, watchedListButton: false })
+                    this.setState({ filmWatchlistApiId:response.data.watchlist[i].id, watchedListButton: false })
                 }
             }            
         })
@@ -168,7 +210,7 @@ export default class DetailsFilm extends Reflux.Component {
     }
 
     deleteFromWatchLaterList(){
-        deleteFromWatchLaterList(this.state.filmApiId)
+        deleteFromWatchLaterList(this.state.filmWatchLaterApiId)
         return window.location.reload(false);
     }
 
@@ -178,10 +220,10 @@ export default class DetailsFilm extends Reflux.Component {
         getWatchLaterList(loginData.username).then(response => {
             for(let i = 0 ; i < response.data.watchlater.length; i++){
                 if(response.data.watchlater[i].watchlater_movie_id == filmID){
-                    this.setState({ filmApiId:response.data.watchlater[i].id, watchLaterListButton: true })
+                    this.setState({ filmWatchLaterApiId:response.data.watchlater[i].id, watchLaterListButton: true })
                     return;
                 }else {
-                    this.setState({ filmApiId:response.data.watchlater[i].id, watchLaterListButton: false })
+                    this.setState({ filmWatchLaterApiId:response.data.watchlater[i].id, watchLaterListButton: false })
                 }
             }            
         })
@@ -245,7 +287,7 @@ export default class DetailsFilm extends Reflux.Component {
                         <div style={{ float: 'left', width: '25%', }}>
                             <CardImg className="imgStyle" width={'100%'} src={Poster_Link + film_details.poster_path} />
                             <div className="bottomStyle">
-                                <StarRating sendRate={this.giveRate} collapse={true} />
+                                <StarRating sendRate={this.giveRate} rating={this.state.rating} collapse={true} />
                                 <Badge color="info" pill style={{ float: 'right', marginTop: '10%' }}>{this.state.rating} / 10</Badge>
                             </div>
                         </div>

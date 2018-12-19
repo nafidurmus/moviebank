@@ -54,21 +54,28 @@ export default class DetailsProfile extends Reflux.Component {
         }
     }
 
-    getLists(){
+    async getLists(){
         const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
-        getWatchLaterList(loginData.username).then(response => {
-            const results = [];
+        let movieIds = [];
+        let watchLaterLength = await getWatchLaterList(loginData.username).then(response => {
             for(let i = 0 ; i < response.data.watchlater.length; i++) {
-                actions.getFilmDetails(response.data.watchlater[i].watchlater_movie_id);
-                results.push(this.state.film_details);
+                movieIds.push(response.data.watchlater[i].watchlater_movie_id);
             }
-            var merged = [].concat.apply([], results);
-            console.log(results)
-            this.setState({ watchLaterList: merged })           
+            return response.data.watchlater.length;
         })
-        getWatchedList(loginData.username).then(response => {
-            this.setState({ watchedList: response.data.watchlist })           
+        console.log("watch later length: " + watchLaterLength)
+        
+        let watchedListLength = await getWatchedList(loginData.username).then(response => {
+            for(let i = 0 ; i < response.data.watchlater.length; i++) {
+                movieIds.push(response.data.watchlist[i].watchlist_movie_id);
+            }
+            return response.data.watchlater.length;
         })
+        console.log("watclist Length: " + watchedListLength)
+        actions.getFilmDetailsForLists(movieIds);
+        //this.setState({ watchLaterList: this.state.filmDetailsForLists }) 
+        //console.log(this.state.watchLaterList)
+        /**/
     }
 
     saveData() {
@@ -205,7 +212,7 @@ export default class DetailsProfile extends Reflux.Component {
                         <Row>
                             <Col sm="12">
                                 <ContentContainer title="Watch Later">
-                                    {this.state.watchLaterList ? <CardListMovie items="4" list={this.state.watchLaterList} /> : "Loading..."}
+                                    {(this.state.watchLaterList != (null || undefined)) ? <CardListMovie items="4" list={this.state.watchLaterList} /> : "Loading..."}
                                 </ContentContainer>
                                 <Link to={{ pathname: "/watch-later", search: ("?id:" + this.state.id) }}>
                                     <Button
@@ -230,8 +237,10 @@ export default class DetailsProfile extends Reflux.Component {
                 <div style={{ margin: '3%' }} className="w-screen">
                     <Container fluid>
                         <Row>
+                            
                             <Col sm={12} md={8} lg={9} style={{ marginBottom: '2%' }}>
                                 {this.renderTabs()}
+                                {this.state.filmDetailsForLists ? console.log(this.state.filmDetailsForLists) : ""}
                             </Col>
                             <Col>
                                 {this.state.boxOffice ? <NowPlaying boxOfficeData={this.state.boxOffice} /> : <div></div>}

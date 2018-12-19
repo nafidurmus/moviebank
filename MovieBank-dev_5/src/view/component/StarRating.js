@@ -13,6 +13,7 @@ export default class StarRating extends Component {
         super(props);
         this.state = { rating: 0, dropdownOpen: null };
         this.changeRating = this.changeRating.bind(this);
+        this.rating = this.rating.bind(this);
         this.toggleDropdown = this.toggleDropdown.bind(this);
     }
 
@@ -29,6 +30,11 @@ export default class StarRating extends Component {
 
         this.props.sendRate(newRating);
     }
+    
+    rating(){
+        if(this.props.rating != 0) { return this.props.rating }
+        else{ return this.state.rating }
+    }
 
     stars() {
         return (
@@ -36,7 +42,7 @@ export default class StarRating extends Component {
                 style={{ float: 'left' }}
                 starDimension={'20px'}
                 starSpacing={'0px'}
-                rating={this.state.rating}
+                rating={this.rating()}
                 starEmptyColor="#9b9b9b"
                 starRatedColor="#0080d1"
                 starHoverColor="#009dff"

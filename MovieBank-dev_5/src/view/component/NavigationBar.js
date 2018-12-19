@@ -44,7 +44,7 @@ export default class NavigationBar extends Component {
             <Nav className="ml-auto">
                 <NavItem style={styles.navbarTextStyle}>
                     <Link to={{ pathname: "/watched-list", search: ("?id:" + loginData.id) }} style={styles.linkStyle}>
-                        Watched List
+                        Watchlist
                     </Link>
                 </NavItem>
                 <NavItem style={styles.navbarTextStyle}>

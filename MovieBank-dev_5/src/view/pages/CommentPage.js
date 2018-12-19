@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Container, Row, Col, CardImg, CardTitle,
+    Container, Row, Col, CardImg, CardTitle, Badge
 } from 'reactstrap';
 import CommentBox from '../component/CommentBox';
 import NavigationBar from '../component/NavigationBar';
@@ -19,6 +19,7 @@ export default class CommentPage extends Reflux.Component {
         actions.getFilmDetails(this.props.location.search.split(":")[1]);
         this.stores = [FilmDetailsStore];
         this.getData = this.getData.bind(this);
+        this.findRates = this.findRates.bind(this);
         this.getData();
     }
 
@@ -33,6 +34,18 @@ export default class CommentPage extends Reflux.Component {
         
     }
 
+    findRates(username, film_id){  
+        if(this.state.rates) {
+            var rates = this.state.rates;
+            for(let i = 0 ; i < rates.length; i++ ){
+                if(rates[i].user.username == username && rates[i].rating_movie_id == film_id){
+                    //console.log(rates[i].rating_value)
+                    return rates[i].rating_value;
+                }
+            }
+        }
+    }
+
     comments() {
         //console.log(this.state.comments)
         let allComments = null;
@@ -41,7 +54,7 @@ export default class CommentPage extends Reflux.Component {
                 (data.comment_movie_id==this.props.location.search.split(":")[1]) ? 
                 <Container fluid style={{ marginTop: '2%', border: "1px solid #d6d7da", backgroundColor: "#ffffff", borderRadius: 10, padding:20 }}>
                     {/*console.log(data)*/}
-                    <h5><p><b>{data.user != null ? data.user.username : "Anonym"}</b>{}</p></h5>
+                    <h5><p><Badge color="info" pill style={{ marginRight: 30 }}>{this.findRates(data.user.username, data.comment_movie_id)} / 10</Badge><b>{data.user != null ? data.user.username : "Anonym"}</b></p></h5>
                     <p className="lead">{data.comment_title}</p>
                     <p>{data.comment_body}</p>
                 </Container> : ""

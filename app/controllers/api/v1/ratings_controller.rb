@@ -1,6 +1,6 @@
 module Api::V1
 	class RatingsController < ApplicationController
-	  before_action :authorize_request, except: [:create, :index]
+	  before_action :authorize_request, except: [:create, :index, :destroy, :show, :update]
 
 	  before_action :set_rating, only: [:show, :update, :destroy]
 

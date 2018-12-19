@@ -16,6 +16,7 @@ export var actions = Reflux.createActions([
     'getTvResults',
     'getShowDetails',
     'getShowCredits',
+    'getFilmDetailsForLists'
 ]);
 
 actions.getPlayings();
@@ -33,3 +34,4 @@ actions.getPersonResults();
 actions.getTvResults();
 actions.getShowDetails();
 actions.getShowCredits();
+actions.getFilmDetailsForLists();

@@ -3,11 +3,13 @@ import React, {
 } from 'react';
 import axios from 'axios';
 
+const domainName = "http://localhost:3001/"
+
 export function addNewUser(userData) {
     //   console.log(this.state.email + this.state.lastname + this.state.firstname + this.state.username + this.state.password + this.state.password_confirmation) 
     return axios({
             method: 'post',
-            url: "http://localhost:3001/api/v1/users/",
+            url: domainName + "api/v1/users/",
             data: userData
         })
         .then(response => {
@@ -17,24 +19,24 @@ export function addNewUser(userData) {
             return error.response
         })
 }
-/*axios.get("http://localhost:3001/api/v1/users/" )
+/*axios.get(domainName + "api/v1/users/" )
     .then(response => {
       console.log(response)
     })
 }*/
 
 export function getComments() {
-    return axios.get("http://localhost:3001/api/v1/comments/")
+    return axios.get(domainName + "api/v1/comments/")
 }
 export function getRate() {
-    return axios.get("http://localhost:3001/api/v1/ratings/")
+    return axios.get(domainName + "api/v1/ratings/")
 }
 
 export function sendComment(comment) {
     //console.log(comment)
     return axios({
             method: 'post',
-            url: "http://localhost:3001/api/v1/comments",
+            url: domainName + "api/v1/comments",
             data: comment
         })
         .then(response => {
@@ -44,10 +46,40 @@ export function sendComment(comment) {
             //console.log(error.response)
         })
 }
+
+export function deleteComment(id) {
+    console.log(id)
+    return axios({
+            method: 'delete',
+            url: domainName + "api/v1/comments/"+id
+        })
+        .then(response => {
+            return console.log(response)
+        })
+        .catch(error => {
+            return console.log(error.response)
+        })
+}
+
+export function updateComment(comment, commentId) {
+    //console.log(comment)
+    return axios({
+            method: 'put',
+            url: domainName + "api/v1/comments/"+commentId,
+            data: comment
+        })
+        .then(response => {
+            console.log(response)
+        })
+        .catch(error => {
+            //console.log(error.response)
+        })
+}
+
 export function sendRate(rating) {
     return axios({
             method: 'post',
-            url: "http://localhost:3001/api/v1/ratings",
+            url: domainName + "api/v1/ratings",
             data: rating
         })
         .then(response => {
@@ -58,11 +90,40 @@ export function sendRate(rating) {
         })
 }
 
+export function deleteRate(id) {
+    console.log(id)
+    return axios({
+            method: 'delete',
+            url: domainName + "api/v1/ratings/"+id
+        })
+        .then(response => {
+            return console.log(response)
+        })
+        .catch(error => {
+            return console.log(error.response)
+        })
+}
+
+export function updateRate(rate, rateId) {
+    //console.log(rate)
+    return axios({
+            method: 'put',
+            url: domainName + "api/v1/ratings/"+rateId,
+            data: rate
+        })
+        .then(response => {
+            console.log(response)
+        })
+        .catch(error => {
+            //console.log(error.response)
+        })
+}
+
 export function login(user) {
     //console.log(user)
     return axios({
             method: 'post',
-            url: "http://localhost:3001/api/v1/auth/login//",
+            url: domainName + "api/v1/auth/login//",
             data: user
         })
         .then(response => {
@@ -77,7 +138,7 @@ export function addWatchedList(userId, movieId) {
     //console.log(user)
     return axios({
             method: 'post',
-            url: "http://localhost:3001/api/v1/watchlists/",
+            url: domainName + "api/v1/watchlists/",
             data: { user_id : userId, watchlist_movie_id: movieId }
         })
         .then(response => {
@@ -92,15 +153,15 @@ export function getWatchedList(username) {
     //console.log(user)
     return axios({
             method: 'get',
-            url: "http://localhost:3001/api/v1/users/" + username,
+            url: domainName + "api/v1/users/" + username,
         })
 }
 
 export function deleteFromWatchedList(id) {
-    //console.log(user)
+    console.log(id)
     return axios({
             method: 'delete',
-            url: "http://localhost:3001/api/v1/watchlists/"+id
+            url: domainName + "api/v1/watchlists/"+id
         })
         .then(response => {
             return console.log(response)
@@ -116,7 +177,7 @@ export function addWatchLaterList(userId, movieId) {
     //console.log(user)
     return axios({
             method: 'post',
-            url: "http://localhost:3001/api/v1/watchlaters/",
+            url: domainName + "api/v1/watchlaters/",
             data: { user_id : userId, watchlater_movie_id: movieId }
         })
         .then(response => {
@@ -131,7 +192,7 @@ export function getWatchLaterList(username) {
     //console.log(user)
     return axios({
             method: 'get',
-            url: "http://localhost:3001/api/v1/users/" + username,
+            url: domainName + "api/v1/users/" + username,
         })
 }
 
@@ -139,7 +200,7 @@ export function deleteFromWatchLaterList(id) {
     //console.log(user)
     return axios({
             method: 'delete',
-            url: "http://localhost:3001/api/v1/watchlaters/"+id
+            url: domainName + "api/v1/watchlaters/"+id
         })
         .then(response => {
             return console.log(response)
