@@ -1,2 +1,2 @@
-web: cd Moviebank_client && PORT=3000 HTTPS=true npm start
+web: cd Moviebank_Client && PORT=3000 HTTPS=true npm start
 api: PORT=3001 && bundle exec rails s
