@@ -26,7 +26,7 @@ export default class Top100 extends Reflux.Component {
                     <Row>
                         <Col sm={12} md={8} lg={9} style={{ marginBottom: '5%' }}>
                             <h3 align="center">Top Rated Movies</h3>
-                            {this.state.top100 ? <TableListMovie films={this.state.top100} /> : <div></div>}
+                            {this.state.top100 ? <TableListMovie films={this.state.top100} deletable={false}/> : <div></div>}
                         </Col>
                         <Col>
                             {this.state.boxOffice ? <NowPlaying boxOfficeData={this.state.boxOffice} /> : <div></div>}

@@ -25,7 +25,7 @@ export default class Trends extends Reflux.Component {
                     <Row>
                         <Col sm={12} md={8} lg={9} style={{ marginBottom: '5%' }}>
                             <h3 align="center">Weekly Trends</h3>
-                            {this.state.playing ? <TableListMovie films={this.state.playing}/> : <div></div>}
+                            {this.state.playing ? <TableListMovie films={this.state.playing} deletable={false}/> : <div></div>}
                         </Col>
                         <Col>
                             {this.state.boxOffice ? <NowPlaying boxOfficeData={this.state.boxOffice} /> : <div></div>}

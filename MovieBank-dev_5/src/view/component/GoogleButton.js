@@ -2,30 +2,64 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import GoogleLogin from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
+import { BrowserRouter as Router, Link, Redirect } from "react-router-dom";
+import { getUsers } from '../../controller/utils/UserApi';
 
 export default class GoogleButton extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {redirect: false};
         this.responseGoogle = this.responseGoogle.bind(this);
         this.signOut = this.signOut.bind(this);
     }
 
-    responseGoogle(response) {
-        // console.log(response);
+    async responseGoogle(response) {
+        //console.log(response);
         if (response.profileObj != (null || "" || undefined)) {
 
+            let userSignedUp = await getUsers().then(results => {
+                for(let i = 0 ; i < results.data.length ; i ++) {
+                    if(results.data[i].email == response.profileObj.email){
+                        return [results.data[i].id, results.data[i].username, results.data[i].password_digest];
+                    }
+                }
+                return null
+            })
+            .catch(error => {
+                return error.response
+            });
+
             const logData = {
-                name: response.profileObj.givenName,
-                surname: response.profileObj.familyName,
+                id: response.profileObj.id,
+                firstname: response.profileObj.givenName,
+                lastname: response.profileObj.familyName,
                 username: response.profileObj.name,
                 password: /*'Google' + */response.profileObj.googleId,
-                password_confirm: /*'Google' + */response.profileObj.googleId,
+                password_confirmation: /*'Google' + */response.profileObj.googleId,
                 email: response.profileObj.email
             };
+            //console.log(userSignedUp)
             this.signOut();
-            localStorage.setItem("loginData", JSON.stringify(logData));
-            window.location.reload(false); //Sayfayı yenilettiriyoruz.
+            
+            if(userSignedUp != null) { 
+                logData.id = userSignedUp[0];
+                logData.username = userSignedUp[1];
+                logData.password = userSignedUp[2];
+                logData.password_confirmation = userSignedUp[2];
+
+                localStorage.setItem("loginData", JSON.stringify(logData));
+                window.location.reload(false); //Sayfayı yenilettiriyoruz.
+            } 
+            else {
+                this.setState({ redirect: true });
+                localStorage.setItem("loginData", JSON.stringify(logData));
+                
+            }
+
+
+            // localStorage.setItem("loginData", JSON.stringify(logData));
+            // window.location.reload(false); //Sayfayı yenilettiriyoruz.
         }
     }
 
@@ -41,6 +75,7 @@ export default class GoogleButton extends Component {
     render() {
         return (
             <div>
+                 {this.state.redirect ? <Redirect to={{ pathname: '/complete-signup' }} /> : ""}
                 <GoogleLogin
                     clientId='302924880838-rtf0gkk0rum1q8vrbmh8gg3oi40dkbtb.apps.googleusercontent.com'
                     buttonText="Continue With Google"
@@ -54,7 +89,6 @@ export default class GoogleButton extends Component {
         );
     }
 }
-
 
 const styles = {
     style: {

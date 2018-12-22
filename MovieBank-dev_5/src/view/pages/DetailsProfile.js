@@ -31,10 +31,10 @@ export default class DetailsProfile extends Reflux.Component {
 
             id: loginInfo.id ? loginInfo.id : "",
             username: loginInfo.username ? loginInfo.username : "",
-            name: loginInfo.name ? loginInfo.name : "",
-            surname: loginInfo.surname ? loginInfo.surname : "",
+            name: loginInfo.firstname ? loginInfo.firstname : "",
+            surname: loginInfo.lastname ? loginInfo.lastname : "",
             password: loginInfo.password ? loginInfo.password : "",
-            password_confirm: loginInfo.password_confirm ? loginInfo.password_confirm : "",
+            password_confirm: loginInfo.password_confirmation ? loginInfo.password_confirmation : "",
             email: loginInfo.email ? loginInfo.email : "",
         }
         this.stores = [BoxOfficeStore, FilmDetailsStore];
@@ -42,6 +42,7 @@ export default class DetailsProfile extends Reflux.Component {
         this.toggleTab = this.toggleTab.bind(this);
         this.renderTabs = this.renderTabs.bind(this);
         this.saveData = this.saveData.bind(this);
+        this.divideFilms = this.divideFilms.bind(this);
         this.getLists = this.getLists.bind(this);
         this.getLists();
     }
@@ -54,39 +55,53 @@ export default class DetailsProfile extends Reflux.Component {
         }
     }
 
+    divideFilms(){
+        if(this.state.listLengths && ((this.state.watchedList && this.state.watchLaterList) == null)){
+            var watchedListLength = this.state.listLengths[0];
+            var watchLaterListLength = this.state.listLengths[1];
+            //console.log(this.state.filmDetailsForLists.slice(0,watchedListLength))
+            this.setState({ 
+                watchedList: this.state.filmDetailsForLists.slice(0,watchedListLength),
+                watchLaterList: this.state.filmDetailsForLists.slice(watchedListLength)
+            })
+        }
+    }
+
     async getLists(){
         const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
         let movieIds = [];
+        
+        let watchedListLength = await getWatchedList(loginData.username).then(response => {
+            for(let i = 0 ; i < response.data.watchlist.length; i++) {
+                movieIds.push(response.data.watchlist[i].watchlist_movie_id);
+            }
+            return response.data.watchlist.length;
+        })
+        //console.log("watclist Length: " + watchedListLength)
+
         let watchLaterLength = await getWatchLaterList(loginData.username).then(response => {
             for(let i = 0 ; i < response.data.watchlater.length; i++) {
                 movieIds.push(response.data.watchlater[i].watchlater_movie_id);
             }
             return response.data.watchlater.length;
         })
-        console.log("watch later length: " + watchLaterLength)
+        //console.log("watch later length: " + watchLaterLength)
         
-        let watchedListLength = await getWatchedList(loginData.username).then(response => {
-            for(let i = 0 ; i < response.data.watchlater.length; i++) {
-                movieIds.push(response.data.watchlist[i].watchlist_movie_id);
-            }
-            return response.data.watchlater.length;
-        })
-        console.log("watclist Length: " + watchedListLength)
+        
         actions.getFilmDetailsForLists(movieIds);
+        await this.setState({ listLengths: [watchedListLength, watchLaterLength]})
         //this.setState({ watchLaterList: this.state.filmDetailsForLists }) 
-        //console.log(this.state.watchLaterList)
-        /**/
     }
 
     saveData() {
         this.setState({ unlockPrflInfo: false });
         const logData = {
             /*Burası Silinecek*/id: this.state.id,
-            name: this.state.name,
-            surname: this.state.surname,
+            firstname: this.state.name,
+            lastname: this.state.surname,
             username: this.state.username,
             password: this.state.password,
-            password_confirm: this.state.password_confirm,
+            password_confirmation: this.state.password_confirm,
             email: this.state.email
         }
         localStorage.clear();
@@ -233,14 +248,14 @@ export default class DetailsProfile extends Reflux.Component {
         document.title = "Profile Details";
         return (
             <div>
+            {this.state.filmDetailsForLists ? this.divideFilms() : ""}
                 <NavigationBar />
                 <div style={{ margin: '3%' }} className="w-screen">
                     <Container fluid>
                         <Row>
-                            
                             <Col sm={12} md={8} lg={9} style={{ marginBottom: '2%' }}>
                                 {this.renderTabs()}
-                                {this.state.filmDetailsForLists ? console.log(this.state.filmDetailsForLists) : ""}
+                                
                             </Col>
                             <Col>
                                 {this.state.boxOffice ? <NowPlaying boxOfficeData={this.state.boxOffice} /> : <div></div>}

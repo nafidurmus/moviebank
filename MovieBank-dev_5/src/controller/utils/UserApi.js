@@ -25,6 +25,13 @@ export function addNewUser(userData) {
     })
 }*/
 
+export function getUsers(){
+    return axios({
+        method: 'get',
+        url: domainName + "api/v1/users/",
+    })
+}
+
 export function getComments() {
     return axios.get(domainName + "api/v1/comments/")
 }

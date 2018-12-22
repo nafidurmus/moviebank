@@ -69,6 +69,7 @@ export default class NavigationBar extends Component {
     }
 
     render() {
+        //localStorage.clear();
         const loginData = localStorage.getItem("loginData") ? JSON.parse(localStorage.getItem("loginData")) : null;
         //console.log(loginData)
 

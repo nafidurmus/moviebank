@@ -64,7 +64,7 @@ export default class SearchResults extends Reflux.Component {
                             {this.state.movieResults.length ?
                                 <div>
                                     <h3>Movies</h3>
-                                    <TableListMovie films={this.state.movieResults} />
+                                    <TableListMovie films={this.state.movieResults} deletable={false}/>
                                 </div> : ""}
                             {this.state.personResults.length ?
                                 <div>

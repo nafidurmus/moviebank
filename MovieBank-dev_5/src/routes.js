@@ -17,6 +17,7 @@ import WatchedList from './view/pages/WatchedList';
 import WatchLater from './view/pages/WatchLater';
 import ForgotPassword from './view/pages/ForgotPassword';
 import TwoFAAuthPage from './view/pages/2FAAuthPage';
+import CompleteSignup from './view/pages/CompleteSignUp';
 
 
 const ReactRouter = () => {
@@ -40,6 +41,7 @@ const ReactRouter = () => {
                 <Route path="/watch-later" component={WatchLater} />
                 <Route path="/forgot-password" component={ForgotPassword} />
                 <Route path="/verify-account" component={TwoFAAuthPage} />
+                <Route path="/complete-signup" component={CompleteSignup} />
             </div>
         </Router>
     );

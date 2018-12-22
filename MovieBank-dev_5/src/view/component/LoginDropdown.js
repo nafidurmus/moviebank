@@ -48,11 +48,11 @@ export default class LoginDropdown extends Component {
                 if (data.status == 200) {
                     const logData = {
                         id: data.data.user.id,
-                        name: data.data.user.firstname,
-                        surname: data.data.user.lastname,
+                        firstname: data.data.user.firstname,
+                        lastname: data.data.user.lastname,
                         username: data.data.user.username,
                         password: data.data.user.password_digest,
-                        password_confirm: data.data.user.password_digest,
+                        password_confirmation: data.data.user.password_digest,
                         email: data.data.user.email
                     }
                     //console.log(logData);

@@ -57,10 +57,11 @@ export default class CommentBox extends React.Component {
                 this.setState({ rates: response.data })
             })
             var currentFilmId = window.location.search.split(":")[1];
-            if(this.state.comments.length != 0 && this.state.rates.length != 0) {
+            if(this.state.comments.length != 0 || this.state.rates.length != 0) {
                 var comments = this.state.comments;
                 var rates = this.state.rates;
                 let commentBool = false, rateBool = false;
+                
                 for(let i = 0; i < rates.length; i++){
                     if(rates[i].user_id == loginData.id && rates[i].rating_movie_id == currentFilmId) {
                         rateBool = true;
@@ -83,7 +84,7 @@ export default class CommentBox extends React.Component {
                 (rateBool && commentBool) ? this.setState({ commentExist: true }) : this.setState({ commentExist: false });
                 return [rateBool, commentBool];
                 
-            } 
+            } else { return [false, false]; } 
             }
     }
 
@@ -92,9 +93,9 @@ export default class CommentBox extends React.Component {
         if(loginData) {
             this.getData().then((response) => {
                 var rateBool =  response[0], commentBool = response[1];
-                if(this.state.comments.length == 0 && this.state.rates.length == 0) {
-                    this.saveDb(loginData)
-                } else {
+                // if((rateBool && commentBool) == false) {
+                //     this.saveDb(loginData)
+                // } else {
                     if(rateBool) { /*alert("You had already gave rate!")*/ }
                     else {
                         if(this.state.rating != (undefined || null || 0)){
@@ -103,10 +104,19 @@ export default class CommentBox extends React.Component {
                         } 
                     }
                     if(commentBool) { /*alert("You had already made comment!")*/ }
-                    else{ if(this.state.comment_title && this.state.comment_body && rateBool){ this.saveDbComment(loginData.id); window.location.reload(false); }} 
+                    else{ 
+                        if(this.state.comment_title && this.state.comment_body && rateBool){ 
+                        this.saveDbComment(loginData.id); 
+                        commentBool = true
+                     }
+                    } 
                     //console.log ("ratebool: " + rateBool + " yorum: " + commentBool)
-                    }      
-                });
+                    return ((commentBool || rateBool) == true) ? window.location.reload(false) : ""
+                    }
+                );
+            }
+            else {
+                return alert("You have to login before write a review.")
             }
         }
 
