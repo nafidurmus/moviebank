@@ -5,8 +5,8 @@
     "node": "9.11.2"
   },
   "scripts": {
-    "build": "cd MovieBank_Client && npm install && npm run build && cd ..",
-    "deploy": "cp -a MovieBank_Client/build/. public/",
+    "build": "cd moviebank_client && npm install && npm run build && cd ..",
+    "deploy": "cp -a moviebank_client/build/. public/",
     "postinstall": "npm run build && npm run deploy && echo 'Client built!'"
   }
 }
