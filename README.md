@@ -79,6 +79,6 @@ $npm start #facebook ve google girişini kullanma isterseniz HTTPS=true npm star
 ## License
 
 
-Bu proje MIT lisansıyla lisanslanmıştır.[LICENSE](https://github.com/nafidurmus/moviebank/blob/master/LICENSE)
+- Bu proje MIT lisansıyla lisanslanmıştır.[LICENSE](https://github.com/nafidurmus/moviebank/blob/master/LICENSE)
 ------------------------------------
 
