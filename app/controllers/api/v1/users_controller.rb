@@ -19,7 +19,6 @@ module Api::V1
       @user = User.new(user_params)
       if @user.save
         render json: @user, status: :created
-        UserMailer.welcome_email(@user).deliver_now
       else
         render json: { errors: @user.errors.full_messages },
                status: :unprocessable_entity
@@ -48,7 +47,7 @@ module Api::V1
     private
 
     def user_params
-      params.permit(:firstname, :lastname, :username, :email, :password, :password_confirmation)
+      params.permit(:firstname, :lastname, :username, :email, :password, :password_confirmation, :twofa, :twofa_on_off)
     end
   end
 end
