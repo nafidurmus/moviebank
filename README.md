@@ -1,6 +1,6 @@
-# Moviebank api
+# Moviebank
 
-One Paragraph of project description goes here
+- Movie Bank aracılığı ile kullanıcıların filmler, diziler ve ünlüler hakkında bilgi edinebileceği, izleyeceği filmleri sitemizde bulunan popüler filmler listesi, gelecek filmler listesi, filmlere yapılan yorumlar ve filmlere verilen puanlar sayesinde seçebileceği, filmlere puan verip yorum yapabileceği kullanıcı etkileşimli bir web site.
 
 ## Getting Started
 
@@ -31,11 +31,21 @@ $ sudo apt-get install postgresql // database i indirmek için
 
 ```
 
-### Installing
-
-Projeyi çalıştırmak için aşağıdaki kodları sırayla çalıştıralım.
+- React nasıl kurulur ? 
 
 ```
+$ curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+$ sudo apt-get install -y nodejs
+
+$ sudo apt-get install npm
+
+```
+
+
+## Projeyi çalıştırmak için aşağıdaki kodları sırayla çalıştıralım.
+
+```
+// api yi çalıştırmak için 
 
 $ git clone this repo
 $ cd repo_name
@@ -44,13 +54,12 @@ $ rails db:create // database oluşturma
 $ rails db:migrate // database ayarları
 $ rails s -p 3001
 
-```
+// client i çalıştırmak için
 
-### Starting
+$cd MovieBank_Client
+$npm install
+$npm start #facebook ve google girişini kullanma isterseniz HTTPS=true npm start
 
-
-```
-$ rails s -p 3001
 
 ```
 
@@ -59,6 +68,9 @@ $ rails s -p 3001
 
 * [Ruby on Rails](https://rubyonrails.org) - Web framework 
 * [Postgresql](https://www.postgresql.org/) - Database
+* [React](https://reactjs.org/) - Client
+
+
 
 ## Contributing
 
