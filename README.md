@@ -2,6 +2,8 @@
 
 - Movie Bank aracılığı ile kullanıcıların filmler, diziler ve ünlüler hakkında bilgi edinebileceği, izleyeceği filmleri sitemizde bulunan popüler filmler listesi, gelecek filmler listesi, filmlere yapılan yorumlar ve filmlere verilen puanlar sayesinde seçebileceği, filmlere puan verip yorum yapabileceği kullanıcı etkileşimli bir web site.
 
+- Client ile ilgili bölümler için detaylı bilgi: [Moviebank Client](https://github.com/ErimTuzcuoglu/MovieBank)
+
 
 ### Hazırlıklar
 
@@ -31,10 +33,10 @@ $ sudo apt-get install postgresql // database i indirmek için
 - React nasıl kurulur ? 
 
 ```
-$ curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-$ sudo apt-get install -y nodejs
+$ [nodejs.org](https://nodejs.org/en/download/) üzerinden işletim sisteminize uygun nodejs sürümünü yükleyin.
+$ React.Js kurulumunu güncel olarak [Reactjs.org](https://reactjs.org/tutorial/tutorial.html#setup-for-the-tutorial) üzerinden bulabilirsiniz.
 
-$ sudo apt-get install npm
+$ sudo apt-get install npm // npm i indirmek için
 
 ```
 
