@@ -2,11 +2,8 @@
 
 - Movie Bank aracılığı ile kullanıcıların filmler, diziler ve ünlüler hakkında bilgi edinebileceği, izleyeceği filmleri sitemizde bulunan popüler filmler listesi, gelecek filmler listesi, filmlere yapılan yorumlar ve filmlere verilen puanlar sayesinde seçebileceği, filmlere puan verip yorum yapabileceği kullanıcı etkileşimli bir web site.
 
-## Getting Started
 
-- Fork and clone this repo
-
-### Prerequisites
+### Hazırlıklar
 
 - Ruby on Rails nasıl kurulur ? 
 
